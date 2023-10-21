@@ -3,7 +3,7 @@ import axios from "axios";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { AlertDismissibleExample } from "../common/alert/Alert";
+import { AlertDismissible } from "../common/alert/Alert";
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 const belvoUrl = process.env.REACT_APP_BELVO_URL;
@@ -80,7 +80,7 @@ export const Login = () => {
     <Container>
       <Row className="justify-content-center">
         <Col md={6} lg={3}>
-          {alert.shown && <AlertDismissibleExample message={alert.message} />}
+          {alert.shown && <AlertDismissible message={alert.message} />}
 
           <form className="Auth-form">
             <div className="Auth-form-content">

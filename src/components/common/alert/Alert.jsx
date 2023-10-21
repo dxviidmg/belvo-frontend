@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Alert from "react-bootstrap/Alert";
 
-export function AlertDismissibleExample({ message }) {
+export function AlertDismissible({ message }) {
   const [show, setShow] = useState(true);
   return (
     <Alert variant="danger" onClose={() => setShow(!{show})} dismissible>
