@@ -7,8 +7,8 @@ import { AlertDismissible } from "../common/alert/Alert";
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 const belvoUrl = process.env.REACT_APP_BELVO_URL;
-const belvoAuth = process.env.REACT_APP_AUTHORIZATION_BELVO;
-const belvoToken = process.env.REACT_APP_TOKEN_BELVO;
+const belvoAuth = process.env.REACT_APP_BELVO_AUTHORIZATION;
+const belvoToken = process.env.REACT_APP_BELVO_TOKEN;
 
 export const Login = () => {
   const [alert, setAlert] = useState({ shown: false, message: "" });
@@ -26,19 +26,22 @@ export const Login = () => {
     });
   };
 
-  const handleBelvoApiCall = async ({ link }) => {
+  const handleBelvoApiCall = async (link) => {
     axios.defaults.headers.common["Authorization"] = belvoAuth;
 
-    const data = {
+    const requestData2 = {
       link: link,
       token: belvoToken,
     };
 
     try {
-      const response = await axios.post(belvoUrl + "api/owners/", data);
-
+      console.log(requestData2)
+      const response = await axios.post(belvoUrl + "api/owners/", requestData2);
       console.log(response.data);
-
+      const responseData2 = response.data;
+      const jsonString2 = JSON.stringify(responseData2);
+      console.log(jsonString2)
+      localStorage.setItem("owner", jsonString2);
       // Handle response data accordingly
     } catch (error) {
       console.log(error);
@@ -55,14 +58,14 @@ export const Login = () => {
         },
       });
 
-      console.log(response.data);
+      const responseData = response.data;
+      console.log(responseData)
+      const jsonString1 = JSON.stringify(responseData);
+      localStorage.setItem("user", jsonString1);
 
-      const data = response.data;
-      const jsonString = JSON.stringify(data);
-      localStorage.setItem("user", jsonString);
-
-      if (data && data.link) {
-        await handleBelvoApiCall(data.link);
+      if (responseData && responseData.belvo_link) {
+        console.log('qwe')
+        await handleBelvoApiCall(responseData.belvo_link);
       }
     } catch (error) {
       if (
@@ -84,7 +87,7 @@ export const Login = () => {
 
           <form className="Auth-form">
             <div className="Auth-form-content">
-              <h3 className="Auth-form-title">Sign In</h3>
+              <h3 className="Auth-form-title">Inicio de sesión</h3>
               <div className="form-group mt-3">
                 <label>Usuario</label>
                 <input
