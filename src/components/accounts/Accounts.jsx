@@ -10,27 +10,26 @@ const belvoToken = process.env.REACT_APP_BELVO_TOKEN;
 export const Accounts = () => {
   const [accounts, setAccounts] = useState([]);
   useEffect(() => {
-      const link = localStorage.getItem("t", "t")
-      axios.defaults.headers.common["Authorization"] = belvoAuth;
-  
-      const requestData2 = {
-        link: link,
-        token: belvoToken,
-      };
-  
-      try {
-        console.log(requestData2)
-//        const response = axios.post(belvoUrl + "api/accounts/", requestData2);
-//        console.log(response.data);
-//        const responseData2 = response.data;
-//        const jsonString2 = JSON.stringify(responseData2);
-//        console.log(jsonString2)
-//        localStorage.setItem("owner", jsonString2);
-        // Handle response data accordingly
-      } catch (error) {
-        console.log(error);
-      }
+    const userString = localStorage.getItem("user");
+    const user = JSON.parse(userString);
 
+    console.log(user);
+    axios.defaults.headers.common["Authorization"] = belvoAuth;
+
+    const requestData = {
+      link: user.belvo_link,
+      token: belvoToken,
+    };
+
+    try {
+      console.log(requestData);
+      const response = axios.post(belvoUrl + "api/accounts/", requestData);
+      console.log(response);
+      const responseData = response.data;
+      console.log(responseData)
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   return (
