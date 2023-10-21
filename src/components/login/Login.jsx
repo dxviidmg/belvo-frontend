@@ -7,7 +7,7 @@ import Col from "react-bootstrap/Col";
 import { AlertDismissibleExample } from "../common/alert/Alert";
 
 export const Login = () => {
-//  const navigate = useNavigate();
+  //  const navigate = useNavigate();
 
   const [shownAlert, setShownAlert] = useState(false);
   const [messageAlert, setMessageAlert] = useState("");
@@ -24,6 +24,35 @@ export const Login = () => {
       [name]: value,
     });
   };
+
+
+  const handleBelvoApiCall = async ({link}) => {
+    const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: process.env.REACT_APP_AUTHORIZATION_BELVO
+        },
+      };
+
+      const data = {
+        link: link,
+        token: process.env.REACT_APP_TOKEN_BELVO
+      };
+
+    try {
+      const belvoUrl = process.env.REACT_APP_BELVO_URL;
+      const url = belvoUrl + "api/owners/";
+      const response = await axios.post(url, data, config);
+
+      console.log(response.data);
+
+      // Handle response data accordingly
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -43,50 +72,11 @@ export const Login = () => {
       console.log(response);
       // Aquí puedes guardar el token en el estado global o en localStorage para futuras solicitudes autenticadas.
       const jsonString = JSON.stringify(data);
-      localStorage.setItem('user', jsonString);
+      localStorage.setItem("user", jsonString);
 
-
-
-
-      const config = {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Basic ZWIzMmRmYTMtOTVmYS00MmEyLTgwNTUtMmRhZmMxMjczYjBjOnpLUWk2SGRVamhuSUd0WF80RE1QNk1IVjRyUEo2WXNxa2o1UDFyKnZpenBAZXNYKjJ1MVVJWndVQFhScUM2X0g='
-        }
-      };
-
-      const data2 = {
-        link: 'fb0e78c6-18e0-4e71-abf7-8664f7adcd71',
-        token: '1234ab',
-        save_data: true
-      };
-
-
-        try {
-            const belvoUrl = process.env.REACT_APP_BELVO_URL;
-            const url = belvoUrl + "api/owners/";
-            const response2 = await axios.post(url, data2, config);
-        
-            console.log(response2.data);
-        
-            const data2 = response2.data;
-            console.log(response2);
-            // Aquí puedes guardar el token en el estado global o en localStorage para futuras solicitudes autenticadas.
-            const jsonString2 = JSON.stringify(data2);
-        //    localStorage.setItem('user', jsonString);
-        } catch (error) {
-            console.log(error)
-        }
-
-
-
-
-
-
-
-
-
-
+      if (data && data.link) {
+        await handleBelvoApiCall(data.link);
+      }
 
 
       //      navigate("/profile");
@@ -152,10 +142,4 @@ export const Login = () => {
       </Row>
     </Container>
   );
-}
-
-
-
-
-
-
+};
