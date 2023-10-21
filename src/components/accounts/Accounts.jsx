@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Container, Row, Col } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
+import { Col, Row } from "react-bootstrap";
 
 const belvoUrl = process.env.REACT_APP_BELVO_URL;
 const belvoAuth = process.env.REACT_APP_BELVO_AUTHORIZATION;
@@ -9,45 +9,55 @@ const belvoToken = process.env.REACT_APP_BELVO_TOKEN;
 
 export const Accounts = () => {
   const [accounts, setAccounts] = useState([]);
-
+  const [selectedAccount, setSelectedAccount] = useState({})
 
   useEffect(() => {
     const fetchData = async () => {
       const userString = localStorage.getItem("user");
       const user = JSON.parse(userString);
       axios.defaults.headers.common["Authorization"] = belvoAuth;
-  
+
       const requestData = {
         link: user.belvo_link,
         token: belvoToken,
       };
-  
+
       try {
-        const response = await axios.post(belvoUrl + "api/accounts/", requestData);
+        const response = await axios.post(
+          belvoUrl + "api/accounts/",
+          requestData
+        );
         setAccounts(response.data);
       } catch (error) {
         console.log(error);
       }
     };
-  
-    // Call the async function
     fetchData();
-  }, []); // Empty dependency array means this effect runs once on mount
-  
+  }, []);
+
+  const handleSelectChange = (event) => {
+    console.log(accounts[event.target.value])
+    setSelectedAccount(accounts[event.target.value]);
+  };
 
   return (
-    <div>
-      <Form.Select aria-label="Default select example">
-        <option>Seleciona una cuenta</option>
+    <>
+      <Form.Select aria-label="Default select example" onChange={handleSelectChange}>
+        <option value="0" >Seleciona una cuenta</option>
         {accounts.map((account, index) => {
-          console.log(account)
           return (
-            <option key={index} value="1">
+            <option key={index} value={index}>
               {account.name}
             </option>
           );
         })}
       </Form.Select>
-    </div>
+      <Row className="text-center">
+        <Col><b>Categoria: {selectedAccount.type}</b></Col>
+        <Col><b>Moneda: {selectedAccount.currency}</b></Col>
+        <Col><b>Balance: {selectedAccount?.balance?.current}</b></Col>
+        
+      </Row>
+    </>
   );
 };
