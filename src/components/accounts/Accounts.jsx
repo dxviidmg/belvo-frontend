@@ -9,37 +9,41 @@ const belvoToken = process.env.REACT_APP_BELVO_TOKEN;
 
 export const Accounts = () => {
   const [accounts, setAccounts] = useState([]);
+
+
   useEffect(() => {
-    const userString = localStorage.getItem("user");
-    const user = JSON.parse(userString);
-
-    console.log(user);
-    axios.defaults.headers.common["Authorization"] = belvoAuth;
-
-    const requestData = {
-      link: user.belvo_link,
-      token: belvoToken,
+    const fetchData = async () => {
+      const userString = localStorage.getItem("user");
+      const user = JSON.parse(userString);
+      axios.defaults.headers.common["Authorization"] = belvoAuth;
+  
+      const requestData = {
+        link: user.belvo_link,
+        token: belvoToken,
+      };
+  
+      try {
+        const response = await axios.post(belvoUrl + "api/accounts/", requestData);
+        setAccounts(response.data);
+      } catch (error) {
+        console.log(error);
+      }
     };
-
-    try {
-      console.log(requestData);
-      const response = axios.post(belvoUrl + "api/accounts/", requestData);
-      console.log(response);
-      const responseData = response.data;
-      console.log(responseData)
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
+  
+    // Call the async function
+    fetchData();
+  }, []); // Empty dependency array means this effect runs once on mount
+  
 
   return (
     <div>
       <Form.Select aria-label="Default select example">
-        <option>Seleciona un banco</option>
+        <option>Seleciona una cuenta</option>
         {accounts.map((account, index) => {
+          console.log(account)
           return (
             <option key={index} value="1">
-              {account.id}
+              {account.name}
             </option>
           );
         })}

@@ -4,6 +4,8 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { AlertDismissible } from "../common/alert/Alert";
+import { useNavigate } from "react-router-dom";
+
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 const belvoUrl = process.env.REACT_APP_BELVO_URL;
@@ -11,6 +13,7 @@ const belvoAuth = process.env.REACT_APP_BELVO_AUTHORIZATION;
 const belvoToken = process.env.REACT_APP_BELVO_TOKEN;
 
 export const Login = () => {
+  const navigate = useNavigate();
   const [alert, setAlert] = useState({ shown: false, message: "" });
 
   const [formData, setFormData] = useState({
@@ -64,9 +67,9 @@ export const Login = () => {
       localStorage.setItem("user", jsonString1);
 
       if (responseData && responseData.belvo_link) {
-        console.log('qwe')
         await handleBelvoApiCall(responseData.belvo_link);
       }
+      navigate("/home");
     } catch (error) {
       if (
         error.response.data.non_field_errors[0] ===
