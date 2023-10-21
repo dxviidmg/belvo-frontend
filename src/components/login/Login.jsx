@@ -42,11 +42,54 @@ export const Login = () => {
       const data = response.data;
       console.log(response);
       // Aquí puedes guardar el token en el estado global o en localStorage para futuras solicitudes autenticadas.
-      console.log("Token:", data.token);
-      localStorage.setItem("token", data.token);
       const jsonString = JSON.stringify(data);
       localStorage.setItem('user', jsonString);
-//      navigate("/profile");
+
+
+
+
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Basic ZWIzMmRmYTMtOTVmYS00MmEyLTgwNTUtMmRhZmMxMjczYjBjOnpLUWk2SGRVamhuSUd0WF80RE1QNk1IVjRyUEo2WXNxa2o1UDFyKnZpenBAZXNYKjJ1MVVJWndVQFhScUM2X0g='
+        }
+      };
+
+      const data2 = {
+        link: 'fb0e78c6-18e0-4e71-abf7-8664f7adcd71',
+        token: '1234ab',
+        save_data: true
+      };
+
+
+        try {
+            const belvoUrl = process.env.REACT_APP_BELVO_URL;
+            const url = belvoUrl + "api/owners/";
+            const response2 = await axios.post(url, data2, config);
+        
+            console.log(response2.data);
+        
+            const data2 = response2.data;
+            console.log(response2);
+            // Aquí puedes guardar el token en el estado global o en localStorage para futuras solicitudes autenticadas.
+            const jsonString2 = JSON.stringify(data2);
+        //    localStorage.setItem('user', jsonString);
+        } catch (error) {
+            console.log(error)
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+      //      navigate("/profile");
     } catch (error) {
       if (
         error.response.data.non_field_errors[0] ===
@@ -110,3 +153,9 @@ export const Login = () => {
     </Container>
   );
 }
+
+
+
+
+
+
