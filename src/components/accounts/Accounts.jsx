@@ -7,7 +7,7 @@ const belvoUrl = process.env.REACT_APP_BELVO_URL;
 const belvoAuth = process.env.REACT_APP_BELVO_AUTHORIZATION;
 const belvoToken = process.env.REACT_APP_BELVO_TOKEN;
 
-export const Accounts = () => {
+export const Accounts = ({updateAccountId}) => {
   const [accounts, setAccounts] = useState([]);
   const [selectedAccount, setSelectedAccount] = useState({})
 
@@ -38,6 +38,7 @@ export const Accounts = () => {
   const handleSelectChange = (event) => {
     console.log(accounts[event.target.value])
     setSelectedAccount(accounts[event.target.value]);
+    updateAccountId(accounts[event.target.value].id)
   };
 
   return (
