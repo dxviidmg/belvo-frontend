@@ -23,6 +23,7 @@ export const Movements = ({ accountId }) => {
 
   useEffect(() => {
     const fetchData = async () => {
+    
       const userString = localStorage.getItem("user");
       const user = JSON.parse(userString);
       axios.defaults.headers.common["Authorization"] = belvoAuth;
@@ -42,14 +43,15 @@ export const Movements = ({ accountId }) => {
         date_to: date_to,
       };
 
+      console.log(requestData)
       try {
         const response = await axios.post(
-          belvoUrl + "api/accounts/",
+          belvoUrl + "api/transactions/",
           requestData
         );
 
         console.log("response", response.data);
-        //        setAccounts(response.data);
+        setMovements(response.data);
       } catch (error) {
         console.log(error);
       }
@@ -63,30 +65,25 @@ export const Movements = ({ accountId }) => {
       <Table striped bordered hover>
         <thead>
           <tr>
-            <th>#</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Username</th>
+            <th>Date</th>
+            <th>Amount</th>
+            <th>Balance</th>
+            <th>description</th>
+            <th>category</th>
+            <th>status</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>1</td>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td colSpan={2}>Larry the Bird</td>
-            <td>@twitter</td>
-          </tr>
+          {movements.map((movement, index) => (
+            <tr key={index}>
+              <td>{movement.created_at}</td>
+              <td>{movement.amount}</td>
+              <td>{movement.balance}</td>
+              <td>{movement.description}</td>
+              <td>{movement.category}</td>
+              <td>{movement.status}</td>
+            </tr>
+          ))}
         </tbody>
       </Table>
     </>
