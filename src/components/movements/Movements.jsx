@@ -59,26 +59,31 @@ export const Movements = ({ accountId }) => {
     fetchData();
   }, [accountId]);
 
+  const formatDate = (dateString) => {
+    const dateObject = new Date(dateString);
+    const formattedDate = `${dateObject.getDate()}-${dateObject.getMonth() + 1}-${dateObject.getFullYear()} ${dateObject.getHours()}:${dateObject.getMinutes()}:${dateObject.getSeconds()}`;
+    return formattedDate;
+  };
+
   return (
-    <>
-      Hola {accountId}
+    <div className="table-responsive">
       <Table striped bordered hover>
         <thead>
           <tr>
-            <th>Date</th>
-            <th>Amount</th>
+            <th>Fecha y hora</th>
+            <th>Cantidad</th>
             <th>Balance</th>
-            <th>description</th>
-            <th>category</th>
+            <th>Description</th>
+            <th>Categoria</th>
             <th>status</th>
           </tr>
         </thead>
         <tbody>
           {movements.map((movement, index) => (
             <tr key={index}>
-              <td>{movement.created_at}</td>
-              <td>{movement.amount}</td>
-              <td>{movement.balance}</td>
+              <td>{formatDate(movement.created_at)}</td>
+              <td>${movement.amount}</td>
+              <td>${movement.balance}</td>
               <td>{movement.description}</td>
               <td>{movement.category}</td>
               <td>{movement.status}</td>
@@ -86,6 +91,6 @@ export const Movements = ({ accountId }) => {
           ))}
         </tbody>
       </Table>
-    </>
+      </div>
   );
 };

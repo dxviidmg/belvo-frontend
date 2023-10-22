@@ -56,7 +56,7 @@ export const Accounts = ({updateAccountId}) => {
       <Row className="text-center">
         <Col><b>Categoria: {selectedAccount.type}</b></Col>
         <Col><b>Moneda: {selectedAccount.currency}</b></Col>
-        <Col><b>Balance: {selectedAccount?.balance?.current}</b></Col>
+        <Col><b>Balance: ${selectedAccount?.balance?.current}</b></Col>
         
       </Row>
     </>
