@@ -42,6 +42,14 @@ export const Movements = ({ account }) => {
       dateAMonthAgo.setMonth(currentDate.getDay() - 5);
 
       const date_from = convertDateToApi(dateAMonthAgo);
+
+
+      const formatNumberToDecimal = (number) => {
+        const formattedNumber = parseFloat(number).toFixed(2);
+        return parseFloat(formattedNumber);
+      };
+
+
       const requestData = {
         link: user.belvo_link,
         token: belvoToken,
@@ -62,21 +70,20 @@ export const Movements = ({ account }) => {
           requestData
         );
         
-        const movements2 = response.data
-
-        console.log('account balance', account.balance.current)
+        let response_movements = response.data        
+        let balance = account.balance.current
         
-        const balance = account.balance.current
-        const movements3 = movements2.map(movement => (
+        response_movements = response_movements.map((movement, index) => {
+          if (index !== 0) {
+            balance = balance - response_movements[index-1].amount;
+          }
+          return {
+            ...movement,
+            balance: balance
+          };
+        });
 
-          {
-          ...movement,
-          balance: balance -= movement.amount
-        }));
-
-        console.log(movements3)
-
-        setMovements(movements3);
+        setMovements(response_movements);
         setLoading(false);
       } catch (error) {
         setLoading(false);
@@ -109,10 +116,10 @@ export const Movements = ({ account }) => {
           <thead>
             <tr>
               <th>Fecha y hora</th>
-              <th>Cantidad</th>
-              <th>Balance</th>
-              <th>Description</th>
-              <th>status</th>
+              <th>Descripción</th>
+              <th>Cargo</th>
+              <th>Balance despues de la transacción</th>
+              <th>Status</th>
             </tr>
           </thead>
           <tbody>
@@ -122,9 +129,9 @@ export const Movements = ({ account }) => {
                 key={index}
               >
                 <td>{formatDateTime(movement.created_at)}</td>
+                <td>{movement.description}</td>
                 <td>${movement.amount}</td>
                 <td>${movement.balance}</td>
-                <td>{movement.description}</td>
                 <td>{formatStatus(movement.status)}</td>
               </tr>
             ))}
