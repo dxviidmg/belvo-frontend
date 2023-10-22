@@ -6,12 +6,11 @@ import React, { useEffect, useState } from "react";
 import OffcanvasExample from "../navbar/Navbar";
 
 export const Home = () => {
-  const [accountId, setAccount] = useState("");
+  const [account, setAccount] = useState({});
 
   // Función para actualizar el estado desde B
-  const updateAccountId = (newAccountId) => {
-    setAccount(newAccountId);
-    console.log("aid", accountId);
+  const updateAccount = (newAccount) => {
+    setAccount(newAccount);
   };
 
   return (
@@ -19,8 +18,8 @@ export const Home = () => {
       <OffcanvasExample></OffcanvasExample>
       <Container>
         <UserInfo></UserInfo>
-        <Accounts updateAccountId={updateAccountId} />
-        <Movements accountId={accountId}></Movements>
+        <Accounts updateAccount={updateAccount} />
+        <Movements account={account}></Movements>
       </Container>
     </>
   );

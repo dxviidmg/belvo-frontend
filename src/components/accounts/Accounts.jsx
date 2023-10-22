@@ -8,10 +8,10 @@ const belvoUrl = process.env.REACT_APP_BELVO_URL;
 const belvoAuth = process.env.REACT_APP_BELVO_AUTHORIZATION;
 const belvoToken = process.env.REACT_APP_BELVO_TOKEN;
 
-export const Accounts = ({updateAccountId}) => {
+export const Accounts = ({updateAccount}) => {
   const [accounts, setAccounts] = useState([]);
   const [selectedAccount, setSelectedAccount] = useState({})
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   useEffect(() => {
     const fetchData = async () => {
       const userString = localStorage.getItem("user");
@@ -29,7 +29,7 @@ export const Accounts = ({updateAccountId}) => {
           requestData
         );
         setAccounts(response.data);
-        setLoading(false)
+//        setLoading(false)
       } catch (error) {
         console.log(error);
       }
@@ -38,9 +38,8 @@ export const Accounts = ({updateAccountId}) => {
   }, []);
 
   const handleSelectChange = (event) => {
-    console.log(accounts[event.target.value])
     setSelectedAccount(accounts[event.target.value]);
-    updateAccountId(accounts[event.target.value].id)
+    updateAccount(accounts[event.target.value])
   };
 
   return (
@@ -48,7 +47,9 @@ export const Accounts = ({updateAccountId}) => {
       <Col md={7}>
       <Loader isLoading={loading}/>
       <Form.Select aria-label="Default select example" onChange={handleSelectChange}>
-        <option value="0" >Seleciona una cuenta</option>
+      <option value="default">
+              Seleccione una cuenta
+            </option>
         {accounts.map((account, index) => {
           return (
             <option key={index} value={index}>

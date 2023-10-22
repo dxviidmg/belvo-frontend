@@ -75,6 +75,7 @@ export const Login = () => {
       }
       navigate("/home");
     } catch (error) {
+      console.log(error)
       if (
         error.response.data.non_field_errors[0] ===
         "Unable to log in with provided credentials."

@@ -9,7 +9,7 @@ const belvoUrl = process.env.REACT_APP_BELVO_URL;
 const belvoAuth = process.env.REACT_APP_BELVO_AUTHORIZATION;
 const belvoToken = process.env.REACT_APP_BELVO_TOKEN;
 
-export const Movements = ({ accountId }) => {
+export const Movements = ({ account }) => {
   const [movements, setMovements] = useState([]);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [loading, setLoading] = useState(false);
@@ -39,31 +39,50 @@ export const Movements = ({ accountId }) => {
       const date_to = convertDateToApi(currentDate);
 
       const dateAMonthAgo = new Date(currentDate);
+      dateAMonthAgo.setMonth(currentDate.getDay() - 5);
 
-      // Restar un mes
-      dateAMonthAgo.setMonth(currentDate.getMonth() - 1);
       const date_from = convertDateToApi(dateAMonthAgo);
       const requestData = {
         link: user.belvo_link,
         token: belvoToken,
-        account: accountId,
+        account: account.id,
         date_from: date_from,
         date_to: date_to,
       };
+
+
+      if (account.id === undefined){
+        setMovements([]);
+      }
+      else {
       setLoading(true);
       try {
         const response = await axios.post(
-          belvoUrl + "api/transactions/",
+          belvoUrl + "api/transactions/?fields=created_at,amount,description,status",
           requestData
         );
+        
+        const movements2 = response.data
+
+        console.log('account balance', account.balance)
+        
+        movements2.forEach(movement => {
+          console.log('mov', movement)
+//          movement.balance = account.ba
+        });
+
+        console.log()
+
         setMovements(response.data);
         setLoading(false);
       } catch (error) {
         console.log(error);
       }
     };
+
+  }      
     fetchData();
-  }, [accountId]);
+  }, [account]);
 
   const formatStatus = (status) => {
     if (status === "PENDING") {
@@ -79,6 +98,8 @@ export const Movements = ({ accountId }) => {
     <div className="">
       <Loader isLoading={loading} />
       <h2>Mis movimientos del ultimo mes</h2>
+
+      <h2>cuenta {account.name}</h2>
       <div className="table-responsive">
         <Table striped bordered hover>
           <thead>
@@ -92,7 +113,10 @@ export const Movements = ({ accountId }) => {
           </thead>
           <tbody>
             {movements.map((movement, index) => (
-              <tr key={index}>
+              
+              <tr
+                key={index}
+              >
                 <td>{formatDateTime(movement.created_at)}</td>
                 <td>${movement.amount}</td>
                 <td>${movement.balance}</td>
