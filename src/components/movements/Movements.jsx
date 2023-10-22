@@ -64,18 +64,22 @@ export const Movements = ({ account }) => {
         
         const movements2 = response.data
 
-        console.log('account balance', account.balance)
+        console.log('account balance', account.balance.current)
         
-        movements2.forEach(movement => {
-          console.log('mov', movement)
-//          movement.balance = account.ba
-        });
+        const balance = account.balance.current
+        const movements3 = movements2.map(movement => (
 
-        console.log()
+          {
+          ...movement,
+          balance: balance -= movement.amount
+        }));
 
-        setMovements(response.data);
+        console.log(movements3)
+
+        setMovements(movements3);
         setLoading(false);
       } catch (error) {
+        setLoading(false);
         console.log(error);
       }
     };
