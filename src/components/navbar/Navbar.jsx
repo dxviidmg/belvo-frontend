@@ -1,13 +1,16 @@
-import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
-import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 
 function OffcanvasExample() {
     const expand = false
+
+    const handleLogout = () => {
+        localStorage.removeItem('user');
+        localStorage.removeItem('owner');
+      };
+
     return (
     <>
         <Navbar key={expand} expand={expand} className="bg-body-tertiary mb-3">
@@ -26,7 +29,7 @@ function OffcanvasExample() {
               </Offcanvas.Header>
               <Offcanvas.Body>
                 <Nav className="justify-content-end flex-grow-1 pe-3">
-                  <Nav.Link href="#action2">Cerrar sesión</Nav.Link>
+                  <Nav.Link href="/"onClick={handleLogout}>Cerrar sesión</Nav.Link>
                 </Nav>
               </Offcanvas.Body>
             </Navbar.Offcanvas>

@@ -5,7 +5,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { AlertDismissible } from "../common/alert/Alert";
 import { useNavigate } from "react-router-dom";
-
+import { BsPersonCircle } from "react-icons/bs";
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 const belvoUrl = process.env.REACT_APP_BELVO_URL;
@@ -38,12 +38,12 @@ export const Login = () => {
     };
 
     try {
-      console.log(requestData2)
+      console.log(requestData2);
       const response = await axios.post(belvoUrl + "api/owners/", requestData2);
       console.log(response.data);
       const responseData2 = response.data;
       const jsonString2 = JSON.stringify(responseData2);
-      console.log(jsonString2)
+      console.log(jsonString2);
       localStorage.setItem("owner", jsonString2);
       // Handle response data accordingly
     } catch (error) {
@@ -55,14 +55,18 @@ export const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post(`${backendUrl}api-token-auth/`, formData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await axios.post(
+        `${backendUrl}api-token-auth/`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       const responseData = response.data;
-      console.log(responseData)
+      console.log(responseData);
       const jsonString1 = JSON.stringify(responseData);
       localStorage.setItem("user", jsonString1);
 
@@ -85,12 +89,17 @@ export const Login = () => {
   return (
     <Container>
       <Row className="justify-content-center">
-        <Col md={6} lg={3}>
+        <Col md={4}>
           {alert.shown && <AlertDismissible message={alert.message} />}
 
           <form className="Auth-form">
             <div className="Auth-form-content">
-              <h3 className="Auth-form-title">Inicio de sesión</h3>
+              <h3 className="Auth-form-title text-center">Inicio de sesión</h3>
+
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                <BsPersonCircle size="200" />
+              </div>
+
               <div className="form-group mt-3">
                 <label>Usuario</label>
                 <input

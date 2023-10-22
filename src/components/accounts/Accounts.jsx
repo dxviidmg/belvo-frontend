@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Form from "react-bootstrap/Form";
 import { Col, Row } from "react-bootstrap";
+import { Loader } from "../loaders/Loader";
 
 const belvoUrl = process.env.REACT_APP_BELVO_URL;
 const belvoAuth = process.env.REACT_APP_BELVO_AUTHORIZATION;
@@ -10,7 +11,7 @@ const belvoToken = process.env.REACT_APP_BELVO_TOKEN;
 export const Accounts = ({updateAccountId}) => {
   const [accounts, setAccounts] = useState([]);
   const [selectedAccount, setSelectedAccount] = useState({})
-
+  const [loading, setLoading] = useState(true)
   useEffect(() => {
     const fetchData = async () => {
       const userString = localStorage.getItem("user");
@@ -28,6 +29,7 @@ export const Accounts = ({updateAccountId}) => {
           requestData
         );
         setAccounts(response.data);
+        setLoading(false)
       } catch (error) {
         console.log(error);
       }
@@ -42,7 +44,9 @@ export const Accounts = ({updateAccountId}) => {
   };
 
   return (
-    <>
+    <Row className="p-1">
+      <Col md={7}>
+      <Loader isLoading={loading}/>
       <Form.Select aria-label="Default select example" onChange={handleSelectChange}>
         <option value="0" >Seleciona una cuenta</option>
         {accounts.map((account, index) => {
@@ -53,12 +57,10 @@ export const Accounts = ({updateAccountId}) => {
           );
         })}
       </Form.Select>
-      <Row className="text-center">
-        <Col><b>Categoria: {selectedAccount.type}</b></Col>
-        <Col><b>Moneda: {selectedAccount.currency}</b></Col>
-        <Col><b>Balance: ${selectedAccount?.balance?.current}</b></Col>
-        
-      </Row>
-    </>
+
+
+      </Col>
+      <Col><h3>Balance actual: ${selectedAccount?.balance?.current}</h3></Col>
+    </Row>
   );
 };

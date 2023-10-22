@@ -3,6 +3,7 @@ import axios from "axios";
 import Form from "react-bootstrap/Form";
 import { Col, Row } from "react-bootstrap";
 import Table from "react-bootstrap/Table";
+import { Loader } from "../loaders/Loader";
 
 const belvoUrl = process.env.REACT_APP_BELVO_URL;
 const belvoAuth = process.env.REACT_APP_BELVO_AUTHORIZATION;
@@ -11,7 +12,7 @@ const belvoToken = process.env.REACT_APP_BELVO_TOKEN;
 export const Movements = ({ accountId }) => {
   const [movements, setMovements] = useState([]);
   const [currentDate, setCurrentDate] = useState(new Date());
-
+  const [loading, setLoading] = useState(false);
 
   const convertDateToApi = (date) => {
     const year = date.getFullYear();
@@ -29,8 +30,6 @@ export const Movements = ({ accountId }) => {
     return formattedDateTime;
   };
 
-
-  
   useEffect(() => {
     const fetchData = async () => {
       const userString = localStorage.getItem("user");
@@ -51,15 +50,14 @@ export const Movements = ({ accountId }) => {
         date_from: date_from,
         date_to: date_to,
       };
-
+      setLoading(true);
       try {
         const response = await axios.post(
           belvoUrl + "api/transactions/",
           requestData
         );
-
-        console.log("response", response.data);
         setMovements(response.data);
+        setLoading(false);
       } catch (error) {
         console.log(error);
       }
@@ -67,8 +65,19 @@ export const Movements = ({ accountId }) => {
     fetchData();
   }, [accountId]);
 
+  const formatStatus = (status) => {
+    if (status === "PENDING") {
+      return "Pendiente";
+    }
+    if (status === "PROCESSED") {
+      return "Procesado";
+    }
+    return status;
+  };
+
   return (
-    <>
+    <div className="">
+      <Loader isLoading={loading} />
       <h2>Mis movimientos del ultimo mes</h2>
       <div className="table-responsive">
         <Table striped bordered hover>
@@ -78,7 +87,6 @@ export const Movements = ({ accountId }) => {
               <th>Cantidad</th>
               <th>Balance</th>
               <th>Description</th>
-              <th>Categoria</th>
               <th>status</th>
             </tr>
           </thead>
@@ -89,13 +97,12 @@ export const Movements = ({ accountId }) => {
                 <td>${movement.amount}</td>
                 <td>${movement.balance}</td>
                 <td>{movement.description}</td>
-                <td>{movement.category}</td>
-                <td>{movement.status}</td>
+                <td>{formatStatus(movement.status)}</td>
               </tr>
             ))}
           </tbody>
         </Table>
       </div>
-    </>
+    </div>
   );
 };
