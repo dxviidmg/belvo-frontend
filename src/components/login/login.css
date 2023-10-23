@@ -1,0 +1,26 @@
+#login-section{
+    background-color: #ec0404;
+    height: 100vh;
+    padding-top: 5vh;
+}
+
+#login-form{
+    padding: 2vh;
+    background-color: #f4f4f4;
+    padding-bottom: 3vh;
+    border-radius: 10px;
+}
+
+.btn{
+    background-color: #ec0404;
+    color: white;
+}
+
+.btn:hover{
+    background-color: red;
+    color: white;
+}
+
+#login-title{
+    color: #ec0404;
+}
