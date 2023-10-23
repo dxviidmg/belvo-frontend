@@ -1,0 +1,8 @@
+.container-fluid, .offcanvas  {
+    background-color: #ec0404;
+    color: white;
+  }
+
+.navbar-brand{
+    color: white;
+}
