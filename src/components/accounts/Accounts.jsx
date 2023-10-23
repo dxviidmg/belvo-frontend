@@ -24,12 +24,13 @@ export const Accounts = ({updateAccount}) => {
       };
 
       try {
+        setLoading(true)
         const response = await axios.post(
           belvoUrl + "api/accounts/",
           requestData
         );
         setAccounts(response.data);
-//        setLoading(false)
+        setLoading(false)
       } catch (error) {
         console.log(error);
       }
