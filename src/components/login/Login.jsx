@@ -6,6 +6,8 @@ import Col from "react-bootstrap/Col";
 import { AlertDismissible } from "../common/alert/Alert";
 import { useNavigate } from "react-router-dom";
 import { BsPersonCircle } from "react-icons/bs";
+import { Loader } from "../loaders/Loader";
+
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 const belvoUrl = process.env.REACT_APP_BELVO_URL;
@@ -15,7 +17,7 @@ const belvoToken = process.env.REACT_APP_BELVO_TOKEN;
 export const Login = () => {
   const navigate = useNavigate();
   const [alert, setAlert] = useState({ shown: false, message: "" });
-
+  const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -53,8 +55,9 @@ export const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setLoading(true)
     try {
+      
       const response = await axios.post(
         `${backendUrl}api-token-auth/`,
         formData,
@@ -73,8 +76,10 @@ export const Login = () => {
       if (responseData && responseData.belvo_link) {
         await handleBelvoApiCall(responseData.belvo_link);
       }
+      setLoading(false)
       navigate("/home");
     } catch (error) {
+      setLoading(false)
       console.log(error)
       if (
         error.response.data.non_field_errors[0] ===
@@ -88,6 +93,8 @@ export const Login = () => {
   };
 
   return (
+    <>
+    <Loader isLoading={loading}/>
     <Container>
       <Row className="justify-content-center">
         <Col md={4}>
@@ -139,5 +146,6 @@ export const Login = () => {
         </Col>
       </Row>
     </Container>
+    </>
   );
 };

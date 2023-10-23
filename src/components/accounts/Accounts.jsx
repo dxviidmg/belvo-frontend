@@ -12,6 +12,7 @@ export const Accounts = ({updateAccount}) => {
   const [accounts, setAccounts] = useState([]);
   const [selectedAccount, setSelectedAccount] = useState({})
   const [loading, setLoading] = useState(false)
+
   useEffect(() => {
     const fetchData = async () => {
       const userString = localStorage.getItem("user");
@@ -44,9 +45,10 @@ export const Accounts = ({updateAccount}) => {
   };
 
   return (
+    <>
+    <Loader isLoading={loading}/>
     <Row className="p-1">
       <Col md={7}>
-      <Loader isLoading={loading}/>
       <Form.Select aria-label="Default select example" onChange={handleSelectChange}>
       <option value="default">
               Seleccione una cuenta
@@ -64,5 +66,6 @@ export const Accounts = ({updateAccount}) => {
       </Col>
       <Col><h3>Balance actual: ${selectedAccount?.balance?.current}</h3></Col>
     </Row>
+    </>
   );
 };
