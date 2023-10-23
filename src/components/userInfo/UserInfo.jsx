@@ -15,7 +15,7 @@ export const UserInfo = () => {
 
   return (
     <>
-      <h1>¡Hola, {userInfo && userInfo[0]?.first_name} !</h1>
+      <h1>¡Hola, {userInfo && userInfo[0]?.first_name}!</h1>
       <p>{userInfo && userInfo[0]?.display_name}</p>
     </>
   );

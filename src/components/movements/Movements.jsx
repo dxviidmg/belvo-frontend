@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Form from "react-bootstrap/Form";
-import { Col, Row } from "react-bootstrap";
 import Table from "react-bootstrap/Table";
 import { Loader } from "../loaders/Loader";
 import './movements.css'
@@ -13,7 +11,7 @@ const belvoToken = process.env.REACT_APP_BELVO_TOKEN;
 
 export const Movements = ({ account }) => {
   const [movements, setMovements] = useState([]);
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const currentDate = new Date()
   const [loading, setLoading] = useState(false);
 
   const convertDateToApi = (date) => {
@@ -88,7 +86,7 @@ export const Movements = ({ account }) => {
       setLoading(true);
       try {
         const response = await axios.post(
-          belvoUrl + "api/transactions/" + "?fields=created_at,amount,description,type",
+          belvoUrl + "api/transactions/?fields=created_at,amount,description,type",
           requestData
         );
         
@@ -116,6 +114,7 @@ export const Movements = ({ account }) => {
   return (
     <div id="movements-section">
       <Loader isLoading={loading} />
+      
       <h2>Mis movimientos del ultimo mes</h2>
 
       <div className="table-responsive">
@@ -130,18 +129,29 @@ export const Movements = ({ account }) => {
             </tr>
           </thead>
           <tbody>
-            {movements.map((movement, index) => (
+
+          {movements.length === 0 ? (
+          <tr>
+          <td colSpan={5} className="text-center">Sin datos para mostrar</td>
+        </tr>
+      ): (
+        movements.map((movement, index) => (
               
-              <tr
-                key={index}
-              >
-                <td>{formatDateTime(movement.created_at)}</td>
-                <td>{movement.description}</td>
-                <td>{movement.type === 'INFLOW' ? ('$' + movement.amount): ""}</td>
-                <td>{movement.type === 'OUTFLOW' ? ('$' + movement.amount): ""}</td>
-                <td>${movement.balance}</td>
-              </tr>
-            ))}
+          <tr
+            key={index}
+          >
+            <td>{formatDateTime(movement.created_at)}</td>
+            <td>{movement.description}</td>
+            <td>{movement.type === 'INFLOW' ? ('$' + movement.amount): ""}</td>
+            <td>{movement.type === 'OUTFLOW' ? ('$' + movement.amount): ""}</td>
+            <td>${movement.balance}</td>
+          </tr>
+        ))
+
+
+      )}
+
+
           </tbody>
         </Table>
       </div>

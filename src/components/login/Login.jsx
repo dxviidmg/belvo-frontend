@@ -102,10 +102,10 @@ export const Login = () => {
 
           <form id="login-form" className="Auth-form">
             <div className="Auth-form-content">
-              <h3 className="Auth-form-title text-center">Inicio de sesión</h3>
+              <h3 id="login-title" className="text-center">Mi banco</h3>
 
-              <div style={{ display: "flex", justifyContent: "center" }}>
-                <BsPersonCircle size="200" />
+              <div style={{ display: "flex", justifyContent: "center", paddingTop:"2vh", paddingBottom:"2vh"}}>
+                <BsPersonCircle size="180" />
               </div>
 
               <div className="form-group mt-3">
