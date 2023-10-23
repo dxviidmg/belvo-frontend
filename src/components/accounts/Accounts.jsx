@@ -64,7 +64,7 @@ export const Accounts = ({updateAccount}) => {
 
 
       </Col>
-      <Col><h3>Balance actual: ${selectedAccount?.balance?.current}</h3></Col>
+      <Col><h3>{selectedAccount?.balance?.current? "Balance actual: $": ""} {selectedAccount?.balance?.current}</h3></Col>
     </Row>
     </>
   );
