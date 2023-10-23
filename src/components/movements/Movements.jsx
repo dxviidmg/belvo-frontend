@@ -11,7 +11,7 @@ const belvoToken = process.env.REACT_APP_BELVO_TOKEN;
 
 export const Movements = ({ account }) => {
   const [movements, setMovements] = useState([]);
-  const currentDate = new Date()
+
   const [loading, setLoading] = useState(false);
 
   const convertDateToApi = (date) => {
@@ -32,6 +32,7 @@ export const Movements = ({ account }) => {
 
   useEffect(() => {
     const fetchData = async () => {
+      const currentDate = new Date()
       const userString = localStorage.getItem("user");
       const user = JSON.parse(userString);
       axios.defaults.headers.common["Authorization"] = belvoAuth;
