@@ -88,7 +88,7 @@ export const Movements = ({ account }) => {
       setLoading(true);
       try {
         const response = await axios.post(
-          belvoUrl + "api/transactions/" + "?fields=created_at,amount,description,type,balance",
+          belvoUrl + "api/transactions/" + "?fields=created_at,amount,description,type",
           requestData
         );
         
@@ -126,7 +126,7 @@ export const Movements = ({ account }) => {
               <th>Descripción</th>
               <th>Abono</th>
               <th>Cargo</th>
-              <th>Balance despues de la transacción</th>
+              <th>Balance</th>
             </tr>
           </thead>
           <tbody>
