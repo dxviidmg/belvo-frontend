@@ -1,2 +1,2 @@
-/api/* https://api.com/ 200!
-/*   /index.html  200
+/api/* https://api.com/:splat 200!
+/* /index.html  200
