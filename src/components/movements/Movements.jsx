@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Table from "react-bootstrap/Table";
 import { Loader } from "../loaders/Loader";
-import './movements.css'
-
+import "./movements.css";
 
 const belvoUrl = process.env.REACT_APP_BELVO_URL;
 const belvoAuth = process.env.REACT_APP_BELVO_AUTHORIZATION;
@@ -30,9 +29,14 @@ export const Movements = ({ account }) => {
     return formattedDateTime;
   };
 
+  const formatNumberToDecimal = (number) => {
+    const formattedNumber = parseFloat(number).toFixed(2);
+    return parseFloat(formattedNumber);
+  };
+
   useEffect(() => {
     const fetchData = async () => {
-      const currentDate = new Date()
+      const currentDate = new Date();
       const userString = localStorage.getItem("user");
       const user = JSON.parse(userString);
       axios.defaults.headers.common["Authorization"] = belvoAuth;
@@ -44,32 +48,24 @@ export const Movements = ({ account }) => {
 
       const date_from = convertDateToApi(dateAMonthAgo);
 
-
-      const formatNumberToDecimal = (number) => {
-        const formattedNumber = parseFloat(number).toFixed(2);
-        return parseFloat(formattedNumber);
-      };
-
       const process_movements = (balance, movements) => {
         return movements.map((movement, index) => {
           if (index !== 0) {
-            if (movement.type === "INFLOW"){
-              balance = balance + movements[index-1].amount;
+            if (movement.type === "INFLOW") {
+              balance = balance + movements[index - 1].amount;
+            } else {
+              balance = balance - movements[index - 1].amount;
             }
-            else {
-              balance = balance - movements[index-1].amount;
-            }
-            balance = formatNumberToDecimal(balance)
+            balance = formatNumberToDecimal(balance);
           }
 
           return {
             ...movement,
-            balance: balance
+            balance: balance,
           };
         });
-      }
+      };
 
-      
       const requestData = {
         link: user.belvo_link,
         token: belvoToken,
@@ -78,44 +74,46 @@ export const Movements = ({ account }) => {
         date_to: date_to,
       };
 
-      console.log(requestData)
+      console.log(requestData);
 
-      if (account.id === undefined){
+      if (account.id === undefined) {
         setMovements([]);
-      }
-      else {
-      setLoading(true);
-      try {
-        const response = await axios.post(
-          belvoUrl + "api/transactions/?fields=created_at,amount,description,type",
-          requestData
-        );
-        
-        let response_movements = response.data        
+      } else {
+        setLoading(true);
+        try {
+          const response = await axios.post(
+            belvoUrl +
+              "api/transactions/?fields=created_at,amount,description,type",
+            requestData
+          );
 
-        console.log('ww')
-        console.log(response_movements)
+          let response_movements = response.data;
 
-        console.log(response_movements)
+          console.log("ww");
+          console.log(response_movements);
 
-        response_movements = process_movements(account.balance.current, response_movements)
-        
-        setMovements(response_movements);
-        setLoading(false);
-      } catch (error) {
-        setLoading(false);
-        console.log(error);
+          console.log(response_movements);
+
+          response_movements = process_movements(
+            account.balance.current,
+            response_movements
+          );
+
+          setMovements(response_movements);
+          setLoading(false);
+        } catch (error) {
+          setLoading(false);
+          console.log(error);
+        }
       }
     };
-
-  }      
     fetchData();
   }, [account]);
 
   return (
     <div id="movements-section">
       <Loader isLoading={loading} />
-      
+
       <h2>Mis movimientos del ultimo mes</h2>
 
       <div className="table-responsive">
@@ -130,29 +128,27 @@ export const Movements = ({ account }) => {
             </tr>
           </thead>
           <tbody>
-
-          {movements.length === 0 ? (
-          <tr>
-          <td colSpan={5} className="text-center">Sin datos para mostrar</td>
-        </tr>
-      ): (
-        movements.map((movement, index) => (
-              
-          <tr
-            key={index}
-          >
-            <td>{formatDateTime(movement.created_at)}</td>
-            <td>{movement.description}</td>
-            <td>{movement.type === 'INFLOW' ? ('$' + movement.amount): ""}</td>
-            <td>{movement.type === 'OUTFLOW' ? ('$' + movement.amount): ""}</td>
-            <td>${movement.balance}</td>
-          </tr>
-        ))
-
-
-      )}
-
-
+            {movements.length === 0 ? (
+              <tr>
+                <td colSpan={5} className="text-center">
+                  Sin datos para mostrar
+                </td>
+              </tr>
+            ) : (
+              movements.map((movement, index) => (
+                <tr key={index}>
+                  <td>{formatDateTime(movement.created_at)}</td>
+                  <td>{movement.description}</td>
+                  <td>
+                    {movement.type === "INFLOW" ? "$" + movement.amount : ""}
+                  </td>
+                  <td>
+                    {movement.type === "OUTFLOW" ? "$" + movement.amount : ""}
+                  </td>
+                  <td>${movement.balance}</td>
+                </tr>
+              ))
+            )}
           </tbody>
         </Table>
       </div>
