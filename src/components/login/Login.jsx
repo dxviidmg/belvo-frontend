@@ -7,7 +7,7 @@ import { AlertDismissible } from "../common/alert/Alert";
 import { useNavigate } from "react-router-dom";
 import { BsPersonCircle } from "react-icons/bs";
 import { Loader } from "../loaders/Loader";
-
+import './login.css'
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 const belvoUrl = process.env.REACT_APP_BELVO_URL;
@@ -93,14 +93,14 @@ export const Login = () => {
   };
 
   return (
-    <>
+    <div id="login-section">
     <Loader isLoading={loading}/>
-    <Container>
+      <Container>
       <Row className="justify-content-center">
         <Col md={4}>
           {alert.shown && <AlertDismissible message={alert.message} />}
 
-          <form className="Auth-form">
+          <form id="login-form" className="Auth-form">
             <div className="Auth-form-content">
               <h3 className="Auth-form-title text-center">Inicio de sesión</h3>
 
@@ -135,7 +135,7 @@ export const Login = () => {
               <div className="d-grid gap-2 mt-3">
                 <button
                   type="submit"
-                  className="btn btn-primary"
+                  className="btn"
                   onClick={handleSubmit}
                 >
                   Iniciar sesión
@@ -145,7 +145,7 @@ export const Login = () => {
           </form>
         </Col>
       </Row>
-    </Container>
-    </>
+      </Container>
+    </div>
   );
 };
