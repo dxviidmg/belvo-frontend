@@ -2,7 +2,7 @@ import { Container } from "react-bootstrap";
 import { Accounts } from "../accounts/Accounts";
 import { UserInfo } from "../userInfo/UserInfo";
 import { Movements } from "../movements/Movements";
-import React, { useEffect, useState } from "react";
+import React, {useState } from "react";
 import OffcanvasExample from "../navbar/Navbar";
 
 export const Home = () => {
