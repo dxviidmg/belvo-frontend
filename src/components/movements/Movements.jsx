@@ -4,6 +4,8 @@ import Form from "react-bootstrap/Form";
 import { Col, Row } from "react-bootstrap";
 import Table from "react-bootstrap/Table";
 import { Loader } from "../loaders/Loader";
+import './movements.css'
+
 
 const belvoUrl = process.env.REACT_APP_BELVO_URL;
 const belvoAuth = process.env.REACT_APP_BELVO_AUTHORIZATION;
@@ -39,7 +41,7 @@ export const Movements = ({ account }) => {
       const date_to = convertDateToApi(currentDate);
 
       const dateAMonthAgo = new Date(currentDate);
-      dateAMonthAgo.setMonth(currentDate.getDay() - 5);
+      dateAMonthAgo.setMonth(currentDate.getMonth() - 1);
 
       const date_from = convertDateToApi(dateAMonthAgo);
 
@@ -49,7 +51,26 @@ export const Movements = ({ account }) => {
         return parseFloat(formattedNumber);
       };
 
+      const process_movements = (balance, movements) => {
+        return movements.map((movement, index) => {
+          if (index !== 0) {
+            if (movement.type === "INFLOW"){
+              balance = balance + movements[index-1].amount;
+            }
+            else {
+              balance = balance - movements[index-1].amount;
+            }
+            balance = formatNumberToDecimal(balance)
+          }
 
+          return {
+            ...movement,
+            balance: balance
+          };
+        });
+      }
+
+      
       const requestData = {
         link: user.belvo_link,
         token: belvoToken,
@@ -58,6 +79,7 @@ export const Movements = ({ account }) => {
         date_to: date_to,
       };
 
+      console.log(requestData)
 
       if (account.id === undefined){
         setMovements([]);
@@ -66,23 +88,19 @@ export const Movements = ({ account }) => {
       setLoading(true);
       try {
         const response = await axios.post(
-          belvoUrl + "api/transactions/?fields=created_at,amount,description,status",
+          belvoUrl + "api/transactions/" + "?fields=created_at,amount,description,type,balance",
           requestData
         );
         
         let response_movements = response.data        
-        let balance = account.balance.current
-        
-        response_movements = response_movements.map((movement, index) => {
-          if (index !== 0) {
-            balance = balance - response_movements[index-1].amount;
-          }
-          return {
-            ...movement,
-            balance: balance
-          };
-        });
 
+        console.log('ww')
+        console.log(response_movements)
+
+        console.log(response_movements)
+
+        response_movements = process_movements(account.balance.current, response_movements)
+        
         setMovements(response_movements);
         setLoading(false);
       } catch (error) {
@@ -95,31 +113,20 @@ export const Movements = ({ account }) => {
     fetchData();
   }, [account]);
 
-  const formatStatus = (status) => {
-    if (status === "PENDING") {
-      return "Pendiente";
-    }
-    if (status === "PROCESSED") {
-      return "Procesado";
-    }
-    return status;
-  };
-
   return (
-    <div className="">
+    <div id="movements-section">
       <Loader isLoading={loading} />
       <h2>Mis movimientos del ultimo mes</h2>
 
-      <h2>cuenta {account.name}</h2>
       <div className="table-responsive">
         <Table striped bordered hover>
           <thead>
             <tr>
               <th>Fecha y hora</th>
               <th>Descripción</th>
+              <th>Abono</th>
               <th>Cargo</th>
               <th>Balance despues de la transacción</th>
-              <th>Status</th>
             </tr>
           </thead>
           <tbody>
@@ -130,9 +137,9 @@ export const Movements = ({ account }) => {
               >
                 <td>{formatDateTime(movement.created_at)}</td>
                 <td>{movement.description}</td>
-                <td>${movement.amount}</td>
+                <td>{movement.type === 'INFLOW' ? ('$' + movement.amount): ""}</td>
+                <td>{movement.type === 'OUTFLOW' ? ('$' + movement.amount): ""}</td>
                 <td>${movement.balance}</td>
-                <td>{formatStatus(movement.status)}</td>
               </tr>
             ))}
           </tbody>
